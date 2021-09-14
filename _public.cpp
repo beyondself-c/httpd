@@ -1,5 +1,5 @@
 /*
- *³ÌĞòÃû: _public.h£¬¹«¹²¹¦ÄÜº¯ÊıÉùÃ÷µÄÍ·ÎÄ¼ş
+ *ç¨‹åºå: _public.hï¼Œå…¬å…±åŠŸèƒ½å‡½æ•°å£°æ˜çš„å¤´æ–‡ä»¶
  * 
 */
 
@@ -14,7 +14,7 @@ bool Logfile(){
 }
 
 
-//C++µÄ·½·¨·â×°socket¿Í»§¶Ë
+//C++çš„æ–¹æ³•å°è£…socketå®¢æˆ·ç«¯
 CTcpClient::CTcpClient()
 {
   m_sockfd=-1;
@@ -23,7 +23,7 @@ CTcpClient::CTcpClient()
   m_btimeout=false;
 }
  
-// Ïò·şÎñÆ÷·¢ÆğÁ¬½Ó£¬ip-·şÎñ¶Ëip£¬portÍ¨ĞÅ¶Ë¿Ú
+// å‘æœåŠ¡å™¨å‘èµ·è¿æ¥ï¼Œip-æœåŠ¡ç«¯ipï¼Œporté€šä¿¡ç«¯å£
 bool CTcpClient::ConnectToServer(const char *ip,const int port)
 {
   if(m_sockfd!=-1) { Close(); m_sockfd=-1;  };
@@ -31,23 +31,23 @@ bool CTcpClient::ConnectToServer(const char *ip,const int port)
   strcpy(m_ip,ip);
   m_port=port;
  
-  struct hostent* h;  // ipµØÖ·ĞÅÏ¢µÄÊı¾İ½á¹¹
+  struct hostent* h;  // ipåœ°å€ä¿¡æ¯çš„æ•°æ®ç»“æ„
   struct sockaddr_in servaddr;
 
-  // ´´½¨¿Í»§¶ËµÄsocket
+  // åˆ›å»ºå®¢æˆ·ç«¯çš„socket
   if ( (m_sockfd = socket(AF_INET,SOCK_STREAM,0)) <0) return false;  
  
   if ( (h=gethostbyname(m_ip))==0 )
   { close(m_sockfd); m_sockfd=-1; return false; }
  
-  // °Ñ·şÎñÆ÷µÄµØÖ·ºÍ¶Ë¿Ú×ª»»ÎªÊı¾İ½á¹¹
+  // æŠŠæœåŠ¡å™¨çš„åœ°å€å’Œç«¯å£è½¬æ¢ä¸ºæ•°æ®ç»“æ„
   
   memset(&servaddr,0,sizeof(servaddr));
   servaddr.sin_family = AF_INET;
   servaddr.sin_port = htons(port);
   memcpy(&servaddr.sin_addr,h->h_addr,h->h_length);
  
-  // Ïò·şÎñÆ÷·¢ÆğÁ¬½ÓÇëÇó
+  // å‘æœåŠ¡å™¨å‘èµ·è¿æ¥è¯·æ±‚
   if (connect(m_sockfd,(struct sockaddr *)&servaddr,sizeof(servaddr))!=0)
   { close(m_sockfd); m_sockfd=-1; return false; }
  
@@ -123,23 +123,23 @@ void CTcpClient::Close()
 
 CTcpClient::~CTcpClient()
 {
-  Close();  // Îö¹¹º¯Êı¹Ø±Õm_sockfd
+  Close();  // ææ„å‡½æ•°å…³é—­m_sockfd
 }
 
 /*
-// Ïò·şÎñ¶Ë·¢ËÍ±¨ÎÄ
+// å‘æœåŠ¡ç«¯å‘é€æŠ¥æ–‡
 int CTcpClient::Send(const void *buf,const int buflen)
 {
   return send(m_sockfd,buf,buflen,0);
 }
-// ½ÓÊÕ¶Ô¶ËµÄ±¨ÎÄ
+// æ¥æ”¶å¯¹ç«¯çš„æŠ¥æ–‡
 int CTcpClient::Recv(void *buf,const int buflen)
 {
   return recv(m_sockfd,buf,buflen,0);
 }
 */
 
-//C++µÄ·½·¨·â×°socket·şÎñ¶Ë
+//C++çš„æ–¹æ³•å°è£…socketæœåŠ¡ç«¯
 CTcpServer::CTcpServer()
 {
   m_socklen=1;
@@ -148,28 +148,28 @@ CTcpServer::CTcpServer()
   m_btimeout=false;
 }
  
-// ³õÊ¼»¯·şÎñ¶ËµÄsocket£¬portÎªÍ¨ĞÅ¶Ë¿Ú
-bool CTcpServer::InitServer(const unsigned int port)  // ³õÊ¼»¯·şÎñ¶Ë
+// åˆå§‹åŒ–æœåŠ¡ç«¯çš„socketï¼Œportä¸ºé€šä¿¡ç«¯å£
+bool CTcpServer::InitServer(const unsigned int port)  // åˆå§‹åŒ–æœåŠ¡ç«¯
 {
   if( m_listenfd >0) { close(m_listenfd); m_listenfd=-1;}
 
-  m_listenfd = socket(AF_INET,SOCK_STREAM,0);  // ´´½¨·şÎñ¶ËµÄsocket
+  m_listenfd = socket(AF_INET,SOCK_STREAM,0);  // åˆ›å»ºæœåŠ¡ç«¯çš„socket
  
 
-  // LinuxÈçÏÂ
+  // Linuxå¦‚ä¸‹
   int opt = 1; unsigned int len = sizeof(opt);
   setsockopt(m_listenfd,SOL_SOCKET,SO_REUSEADDR,&opt,len);
 
 
-  // °Ñ·şÎñ¶ËÓÃÓÚÍ¨ĞÅµÄµØÖ·ºÍ¶Ë¿Ú°ó¶¨µ½socketÉÏ
+  // æŠŠæœåŠ¡ç«¯ç”¨äºé€šä¿¡çš„åœ°å€å’Œç«¯å£ç»‘å®šåˆ°socketä¸Š
   memset(&m_servaddr,0,sizeof(m_servaddr));
-  m_servaddr.sin_family = AF_INET;  // Ğ­Òé×å£¬ÔÚsocket±à³ÌÖĞÖ»ÄÜÊÇAF_INET
-  m_servaddr.sin_addr.s_addr = htonl(INADDR_ANY);  // ±¾Ö÷»úµÄÈÎÒâipµØÖ·
-  m_servaddr.sin_port = htons(port);  // °ó¶¨Í¨ĞÅ¶Ë¿Ú
+  m_servaddr.sin_family = AF_INET;  // åè®®æ—ï¼Œåœ¨socketç¼–ç¨‹ä¸­åªèƒ½æ˜¯AF_INET
+  m_servaddr.sin_addr.s_addr = htonl(INADDR_ANY);  // æœ¬ä¸»æœºçš„ä»»æ„ipåœ°å€
+  m_servaddr.sin_port = htons(port);  // ç»‘å®šé€šä¿¡ç«¯å£
   if (bind(m_listenfd,(struct sockaddr *)&m_servaddr,sizeof(m_servaddr)) != 0 )
   { CloseListen();  return false; }
  
-  // °ÑsocketÉèÖÃÎª¼àÌıÄ£Ê½
+  // æŠŠsocketè®¾ç½®ä¸ºç›‘å¬æ¨¡å¼
   if (listen(m_listenfd,5) != 0 ) {CloseListen(); return false; }
  
   m_socklen=sizeof(struct sockaddr_in);
@@ -177,13 +177,13 @@ bool CTcpServer::InitServer(const unsigned int port)  // ³õÊ¼»¯·şÎñ¶Ë
   return true;
 }
 
-bool CTcpServer::Accept()  // µÈ´ı¿Í»§¶ËµÄÁ¬½Ó
+bool CTcpServer::Accept()  // ç­‰å¾…å®¢æˆ·ç«¯çš„è¿æ¥
 {
   if(m_listenfd==-1) return false;
   if ( (m_connfd=accept(m_listenfd,(struct sockaddr* )&m_clientaddr,\
                        (socklen_t*)&m_socklen)) <= 0) return false;
  
-  logfile.Write("¿Í»§¶Ë%sÒÑÁ¬½Ó\n",inet_ntoa(m_clientaddr.sin_addr));
+  logfile.Write("å®¢æˆ·ç«¯%så·²è¿æ¥\n",inet_ntoa(m_clientaddr.sin_addr));
   return true;
 }
 
@@ -288,7 +288,7 @@ bool TcpRead(const int sockfd,char *buffer,int *ibuflen,const int itimeout)
   (*ibuflen)=0;
   if( (Readn(sockfd,(char*)ibuflen,4)==false)  ) return false;
 
-  (*ibuflen)=ntohl(*ibuflen); // °ÑÍøÂç×Ö½ÚĞò×ª»»ÎªÖ÷»ú×Ö½ÚĞò¡£
+  (*ibuflen)=ntohl(*ibuflen); // æŠŠç½‘ç»œå­—èŠ‚åºè½¬æ¢ä¸ºä¸»æœºå­—èŠ‚åºã€‚
 
   if( (Readn(sockfd,buffer,(*ibuflen) )==false)  ) return false;
   
@@ -366,11 +366,11 @@ bool Writen(const int sockfd,const char *buffer,const size_t n)
 
 
 /*
-  È¡²Ù×÷ÏµÍ³µÄÊ±¼ä£¬²¢°ÑÕûÊı±íÊ¾µÄÊ±¼ä×ª»»Îª×Ö·û´®±íÊ¾µÄ¸ñÊ½¡£
-  stime£ºÓÃÓÚ´æ·Å»ñÈ¡µ½µÄÊ±¼ä×Ö·û´®¡£
-  timetvl£ºÊ±¼äµÄÆ«ÒÆÁ¿£¬µ¥Î»£ºÃë£¬0ÊÇÈ±Ê¡Öµ£¬±íÊ¾µ±Ç°Ê±¼ä£¬30±íÊ¾µ±Ç°Ê±¼ä30ÃëÖ®ºóµÄÊ±>¼äµã£¬-30±íÊ¾µ±Ç°Ê±¼ä30ÃëÖ®Ç°µÄÊ±¼äµã¡£
-  fmt£ºÊä³öÊ±¼äµÄ¸ñÊ½£¬È±Ê¡ÊÇ"yyyy-mm-dd hh24:mi:ss"£¬Ä¿Ç°Ö§³ÖÒÔÏÂ¸ñÊ½£º
-  "yyyy-mm-dd hh24:mi:ss"£¬´Ë¸ñÊ½ÊÇÈ±Ê¡¸ñÊ½¡£
+  å–æ“ä½œç³»ç»Ÿçš„æ—¶é—´ï¼Œå¹¶æŠŠæ•´æ•°è¡¨ç¤ºçš„æ—¶é—´è½¬æ¢ä¸ºå­—ç¬¦ä¸²è¡¨ç¤ºçš„æ ¼å¼ã€‚
+  stimeï¼šç”¨äºå­˜æ”¾è·å–åˆ°çš„æ—¶é—´å­—ç¬¦ä¸²ã€‚
+  timetvlï¼šæ—¶é—´çš„åç§»é‡ï¼Œå•ä½ï¼šç§’ï¼Œ0æ˜¯ç¼ºçœå€¼ï¼Œè¡¨ç¤ºå½“å‰æ—¶é—´ï¼Œ30è¡¨ç¤ºå½“å‰æ—¶é—´30ç§’ä¹‹åçš„æ—¶>é—´ç‚¹ï¼Œ-30è¡¨ç¤ºå½“å‰æ—¶é—´30ç§’ä¹‹å‰çš„æ—¶é—´ç‚¹ã€‚
+  fmtï¼šè¾“å‡ºæ—¶é—´çš„æ ¼å¼ï¼Œç¼ºçœæ˜¯"yyyy-mm-dd hh24:mi:ss"ï¼Œç›®å‰æ”¯æŒä»¥ä¸‹æ ¼å¼ï¼š
+  "yyyy-mm-dd hh24:mi:ss"ï¼Œæ­¤æ ¼å¼æ˜¯ç¼ºçœæ ¼å¼ã€‚
   "yyyymmddhh24miss"
   "yyyy-mm-dd"
   "yyyymmdd"
@@ -380,10 +380,10 @@ bool Writen(const int sockfd,const char *buffer,const size_t n)
   "hh24mi"
   "hh24"
   "mi"
-  ×¢Òâ£º
-    1£©Ğ¡Ê±µÄ±íÊ¾·½·¨ÊÇhh24£¬²»ÊÇhh£¬ÕâÃ´×öµÄÄ¿µÄÊÇÎªÁË±£³ÖÓëÊı¾İ¿âµÄÊ±¼ä±íÊ¾·½·¨Ò»ÖÂ£»
-    2£©ÒÔÉÏÁĞ³öÁË³£ÓÃµÄÊ±¼ä¸ñÊ½£¬Èç¹û²»ÄÜÂú×ãÄãÓ¦ÓÃ¿ª·¢µÄĞèÇó£¬ÇëĞŞ¸ÄÔ´´úÂëÔö¼Ó¸ü¶àµÄ\ ¸ñÊ½Ö§³Ö£»
-    3£©µ÷ÓÃº¯ÊıµÄÊ±ºò£¬Èç¹ûfmtÓëÉÏÊö¸ñÊ½¶¼Æ¥Åä£¬stimeµÄÄÚÈİ½«Îª¿Õ¡£
+  æ³¨æ„ï¼š
+    1ï¼‰å°æ—¶çš„è¡¨ç¤ºæ–¹æ³•æ˜¯hh24ï¼Œä¸æ˜¯hhï¼Œè¿™ä¹ˆåšçš„ç›®çš„æ˜¯ä¸ºäº†ä¿æŒä¸æ•°æ®åº“çš„æ—¶é—´è¡¨ç¤ºæ–¹æ³•ä¸€è‡´ï¼›
+    2ï¼‰ä»¥ä¸Šåˆ—å‡ºäº†å¸¸ç”¨çš„æ—¶é—´æ ¼å¼ï¼Œå¦‚æœä¸èƒ½æ»¡è¶³ä½ åº”ç”¨å¼€å‘çš„éœ€æ±‚ï¼Œè¯·ä¿®æ”¹æºä»£ç å¢åŠ æ›´å¤šçš„\ æ ¼å¼æ”¯æŒï¼›
+    3ï¼‰è°ƒç”¨å‡½æ•°çš„æ—¶å€™ï¼Œå¦‚æœfmtä¸ä¸Šè¿°æ ¼å¼éƒ½åŒ¹é…ï¼Œstimeçš„å†…å®¹å°†ä¸ºç©ºã€‚
 */
 void LocalTime(char *stime,const char *fmt,const int timetvl)
 {
@@ -397,10 +397,10 @@ void LocalTime(char *stime,const char *fmt,const int timetvl)
 }
 
 
-// °ÑÕûÊı±íÊ¾µÄÊ±¼ä×ª»»Îª×Ö·û´®±íÊ¾µÄÊ±¼ä¡£
-// ltime£ºÕûÊı±íÊ¾µÄÊ±¼ä¡£
-// stime£º×Ö·û´®±íÊ¾µÄÊ±¼ä¡£
-// fmt£ºÊä³ö×Ö·û´®Ê±¼ästimeµÄ¸ñÊ½£¬ÓëLocalTimeº¯ÊıµÄfmt²ÎÊıÏàÍ¬£¬Èç¹ûfmtµÄ¸ñÊ½²»ÕıÈ·£¬\stime½«Îª¿Õ¡£
+// æŠŠæ•´æ•°è¡¨ç¤ºçš„æ—¶é—´è½¬æ¢ä¸ºå­—ç¬¦ä¸²è¡¨ç¤ºçš„æ—¶é—´ã€‚
+// ltimeï¼šæ•´æ•°è¡¨ç¤ºçš„æ—¶é—´ã€‚
+// stimeï¼šå­—ç¬¦ä¸²è¡¨ç¤ºçš„æ—¶é—´ã€‚
+// fmtï¼šè¾“å‡ºå­—ç¬¦ä¸²æ—¶é—´stimeçš„æ ¼å¼ï¼Œä¸LocalTimeå‡½æ•°çš„fmtå‚æ•°ç›¸åŒï¼Œå¦‚æœfmtçš„æ ¼å¼ä¸æ­£ç¡®ï¼Œ\stimeå°†ä¸ºç©ºã€‚
 void timetostr(const time_t ltime,char *stime,const char *fmt)
 {
   if (stime==0) return;
@@ -432,13 +432,13 @@ void timetostr(const time_t ltime,char *stime,const char *fmt)
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-// ¸ù¾İ¾ø¶ÔÂ·¾¶µÄÎÄ¼şÃû»òÄ¿Â¼ÃûÖğ¼¶µÄ´´½¨Ä¿Â¼¡£
-// pathorfilename£º¾ø¶ÔÂ·¾¶µÄÎÄ¼şÃû»òÄ¿Â¼Ãû¡£
-// bisfilename£ºËµÃ÷pathorfilenameµÄÀàĞÍ£¬true-pathorfilenameÊÇÎÄ¼şÃû£¬·ñÔòÊÇÄ¿Â¼Ãû£¬\È±Ê¡ÖµÎªtrue¡£
-// ·µ»ØÖµ£ºtrue-´´½¨³É¹¦£¬false-´´½¨Ê§°Ü£¬Èç¹û·µ»ØÊ§°Ü£¬Ô­ÒòÓĞ´ó¸ÅÓĞÈıÖÖÇé¿ö£º1£©È¨ÏŞ\²»×ã£» 2£©pathorfilename²ÎÊı²»ÊÇºÏ·¨µÄÎÄ¼şÃû»òÄ¿Â¼Ãû£»3£©´ÅÅÌ¿Õ¼ä²»×ã¡£
+// æ ¹æ®ç»å¯¹è·¯å¾„çš„æ–‡ä»¶åæˆ–ç›®å½•åé€çº§çš„åˆ›å»ºç›®å½•ã€‚
+// pathorfilenameï¼šç»å¯¹è·¯å¾„çš„æ–‡ä»¶åæˆ–ç›®å½•åã€‚
+// bisfilenameï¼šè¯´æ˜pathorfilenameçš„ç±»å‹ï¼Œtrue-pathorfilenameæ˜¯æ–‡ä»¶åï¼Œå¦åˆ™æ˜¯ç›®å½•åï¼Œ\ç¼ºçœå€¼ä¸ºtrueã€‚
+// è¿”å›å€¼ï¼štrue-åˆ›å»ºæˆåŠŸï¼Œfalse-åˆ›å»ºå¤±è´¥ï¼Œå¦‚æœè¿”å›å¤±è´¥ï¼ŒåŸå› æœ‰å¤§æ¦‚æœ‰ä¸‰ç§æƒ…å†µï¼š1ï¼‰æƒé™\ä¸è¶³ï¼› 2ï¼‰pathorfilenameå‚æ•°ä¸æ˜¯åˆæ³•çš„æ–‡ä»¶åæˆ–ç›®å½•åï¼›3ï¼‰ç£ç›˜ç©ºé—´ä¸è¶³ã€‚
 bool MKDIR(const char *filename,bool bisfilename)
 {
-  // ¼ì²éÄ¿Â¼ÊÇ·ñ´æÔÚ£¬Èç¹û²»´æÔÚ£¬Öğ¼¶´´½¨×ÓÄ¿Â¼
+  // æ£€æŸ¥ç›®å½•æ˜¯å¦å­˜åœ¨ï¼Œå¦‚æœä¸å­˜åœ¨ï¼Œé€çº§åˆ›å»ºå­ç›®å½•
   char strPathName[301];
 
   int ilen=strlen(filename);
@@ -467,10 +467,10 @@ bool MKDIR(const char *filename,bool bisfilename)
 }
 
 
-// ´ò¿ªÎÄ¼ş¡£
-// FOPENº¯Êıµ÷ÓÃfopen¿âº¯Êı´ò¿ªÎÄ¼ş£¬Èç¹ûÎÄ¼şÃûÖĞ°üº¬µÄÄ¿Â¼²»´æÔÚ£¬¾Í´´½¨Ä¿Â¼¡£
-// FOPENº¯ÊıµÄ²ÎÊıºÍ·µ»ØÖµÓëfopenº¯ÊıÍêÈ«ÏàÍ¬¡£
-// ÔÚÓ¦ÓÃ¿ª·¢ÖĞ£¬ÓÃFOPENº¯Êı´úÌæfopen¿âº¯Êı¡£
+// æ‰“å¼€æ–‡ä»¶ã€‚
+// FOPENå‡½æ•°è°ƒç”¨fopenåº“å‡½æ•°æ‰“å¼€æ–‡ä»¶ï¼Œå¦‚æœæ–‡ä»¶åä¸­åŒ…å«çš„ç›®å½•ä¸å­˜åœ¨ï¼Œå°±åˆ›å»ºç›®å½•ã€‚
+// FOPENå‡½æ•°çš„å‚æ•°å’Œè¿”å›å€¼ä¸fopenå‡½æ•°å®Œå…¨ç›¸åŒã€‚
+// åœ¨åº”ç”¨å¼€å‘ä¸­ï¼Œç”¨FOPENå‡½æ•°ä»£æ›¿fopenåº“å‡½æ•°ã€‚
 FILE *FOPEN(const char *filename,const char *mode)
 {
   if (MKDIR(filename) == false) return 0;
@@ -505,15 +505,15 @@ void CLogFile::Close()
   m_bEnBuffer=false;
 }
 
-// ´ò¿ªÈÕÖ¾ÎÄ¼ş¡£
-// filename£ºÈÕÖ¾ÎÄ¼şÃû£¬½¨Òé²ÉÓÃ¾ø¶ÔÂ·¾¶£¬Èç¹ûÎÄ¼şÃûÖĞµÄÄ¿Â¼²»´æÔÚ£¬¾ÍÏÈ´´½¨Ä¿Â¼¡£
-// openmode£ºÈÕÖ¾ÎÄ¼şµÄ´ò¿ª·½Ê½£¬Óëfopen¿âº¯Êı´ò¿ªÎÄ¼şµÄ·½Ê½ÏàÍ¬£¬È±Ê¡ÖµÊÇ"a+"¡£
-// bBackup£ºÊÇ·ñ×Ô¶¯ÇĞ»»£¬true-ÇĞ»»£¬false-²»ÇĞ»»£¬ÔÚ¶à½ø³ÌµÄ·şÎñ³ÌĞòÖĞ£¬Èç¹û¶à¸ö½øĞĞ\¹²ÓÃÒ»¸öÈÕÖ¾ÎÄ¼ş£¬bBackup±ØĞëÎªfalse¡£
-// bEnBuffer£ºÊÇ·ñÆôÓÃÎÄ¼ş»º³å»úÖÆ£¬true-ÆôÓÃ£¬false-²»ÆôÓÃ£¬Èç¹ûÆôÓÃ»º³åÇø£¬ÄÇÃ´Ğ´½ø\ÈÕÖ¾ÎÄ¼şÖĞµÄÄÚÈİ²»»áÁ¢¼´Ğ´ÈëÎÄ¼ş£¬È±Ê¡ÊÇ²»ÆôÓÃ¡£
+// æ‰“å¼€æ—¥å¿—æ–‡ä»¶ã€‚
+// filenameï¼šæ—¥å¿—æ–‡ä»¶åï¼Œå»ºè®®é‡‡ç”¨ç»å¯¹è·¯å¾„ï¼Œå¦‚æœæ–‡ä»¶åä¸­çš„ç›®å½•ä¸å­˜åœ¨ï¼Œå°±å…ˆåˆ›å»ºç›®å½•ã€‚
+// openmodeï¼šæ—¥å¿—æ–‡ä»¶çš„æ‰“å¼€æ–¹å¼ï¼Œä¸fopenåº“å‡½æ•°æ‰“å¼€æ–‡ä»¶çš„æ–¹å¼ç›¸åŒï¼Œç¼ºçœå€¼æ˜¯"a+"ã€‚
+// bBackupï¼šæ˜¯å¦è‡ªåŠ¨åˆ‡æ¢ï¼Œtrue-åˆ‡æ¢ï¼Œfalse-ä¸åˆ‡æ¢ï¼Œåœ¨å¤šè¿›ç¨‹çš„æœåŠ¡ç¨‹åºä¸­ï¼Œå¦‚æœå¤šä¸ªè¿›è¡Œ\å…±ç”¨ä¸€ä¸ªæ—¥å¿—æ–‡ä»¶ï¼ŒbBackupå¿…é¡»ä¸ºfalseã€‚
+// bEnBufferï¼šæ˜¯å¦å¯ç”¨æ–‡ä»¶ç¼“å†²æœºåˆ¶ï¼Œtrue-å¯ç”¨ï¼Œfalse-ä¸å¯ç”¨ï¼Œå¦‚æœå¯ç”¨ç¼“å†²åŒºï¼Œé‚£ä¹ˆå†™è¿›\æ—¥å¿—æ–‡ä»¶ä¸­çš„å†…å®¹ä¸ä¼šç«‹å³å†™å…¥æ–‡ä»¶ï¼Œç¼ºçœæ˜¯ä¸å¯ç”¨ã€‚
 bool CLogFile::Open(const char *filename,const char *openmode,bool bBackup,\
                     bool bEnBuffer)
 {
-  // Èç¹ûÎÄ¼şÖ¸ÕëÊÇ´ò¿ªµÄ×´Ì¬£¬ÏÈ¹Ø±ÕËü¡£
+  // å¦‚æœæ–‡ä»¶æŒ‡é’ˆæ˜¯æ‰“å¼€çš„çŠ¶æ€ï¼Œå…ˆå…³é—­å®ƒã€‚
   Close();
 
   strcpy(m_filename,filename);
@@ -527,14 +527,14 @@ bool CLogFile::Open(const char *filename,const char *openmode,bool bBackup,\
   return true;
 }
 
-// Èç¹ûÈÕÖ¾ÎÄ¼ş´óÓÚ100M£¬¾Í°Ñµ±Ç°µÄÈÕÖ¾ÎÄ¼ş±¸·İ³ÉÀúÊ·ÈÕÖ¾ÎÄ¼ş£¬ÇĞ»»³É¹¦ºóÇå¿Õµ±Ç°ÈÕÖ¾\ÎÄ¼şµÄÄÚÈİ¡£
-// ±¸·İºóµÄÎÄ¼ş»áÔÚÈÕÖ¾ÎÄ¼şÃûºó¼ÓÉÏÈÕÆÚÊ±¼ä¡£
-// ×¢Òâ£¬ÔÚ¶à½ø³ÌµÄ³ÌĞòÖĞ£¬ÈÕÖ¾ÎÄ¼ş²»¿ÉÇĞ»»£¬¶àÏßµÄ³ÌĞòÖĞ£¬ÈÕÖ¾ÎÄ¼ş¿ÉÒÔÇĞ»»¡£
+// å¦‚æœæ—¥å¿—æ–‡ä»¶å¤§äº100Mï¼Œå°±æŠŠå½“å‰çš„æ—¥å¿—æ–‡ä»¶å¤‡ä»½æˆå†å²æ—¥å¿—æ–‡ä»¶ï¼Œåˆ‡æ¢æˆåŠŸåæ¸…ç©ºå½“å‰æ—¥å¿—\æ–‡ä»¶çš„å†…å®¹ã€‚
+// å¤‡ä»½åçš„æ–‡ä»¶ä¼šåœ¨æ—¥å¿—æ–‡ä»¶åååŠ ä¸Šæ—¥æœŸæ—¶é—´ã€‚
+// æ³¨æ„ï¼Œåœ¨å¤šè¿›ç¨‹çš„ç¨‹åºä¸­ï¼Œæ—¥å¿—æ–‡ä»¶ä¸å¯åˆ‡æ¢ï¼Œå¤šçº¿çš„ç¨‹åºä¸­ï¼Œæ—¥å¿—æ–‡ä»¶å¯ä»¥åˆ‡æ¢ã€‚
 bool CLogFile::BackupLogFile()
 {
   if (m_tracefp == 0) return false;
 
-  // ²»±¸·İ
+  // ä¸å¤‡ä»½
   if (m_bBackup == false) return true;
 
   fseek(m_tracefp,0L,2);
@@ -558,8 +558,8 @@ bool CLogFile::BackupLogFile()
   return true;
 }
 
-// °ÑÄÚÈİĞ´ÈëÈÕÖ¾ÎÄ¼ş£¬fmtÊÇ¿É±ä²ÎÊı£¬Ê¹ÓÃ·½·¨Óëprintf¿âº¯ÊıÏàÍ¬¡£
-// Write·½·¨»áĞ´Èëµ±Ç°µÄÊ±¼ä£¬WriteEx·½·¨²»Ğ´Ê±¼ä¡£
+// æŠŠå†…å®¹å†™å…¥æ—¥å¿—æ–‡ä»¶ï¼Œfmtæ˜¯å¯å˜å‚æ•°ï¼Œä½¿ç”¨æ–¹æ³•ä¸printfåº“å‡½æ•°ç›¸åŒã€‚
+// Writeæ–¹æ³•ä¼šå†™å…¥å½“å‰çš„æ—¶é—´ï¼ŒWriteExæ–¹æ³•ä¸å†™æ—¶é—´ã€‚
 bool CLogFile::Write(const char *fmt,...)
 {
   if (m_tracefp == 0) return false;
@@ -578,8 +578,8 @@ bool CLogFile::Write(const char *fmt,...)
   return true;
 }
 
-// °ÑÄÚÈİĞ´ÈëÈÕÖ¾ÎÄ¼ş£¬fmtÊÇ¿É±ä²ÎÊı£¬Ê¹ÓÃ·½·¨Óëprintf¿âº¯ÊıÏàÍ¬¡£
-// Write·½·¨»áĞ´Èëµ±Ç°µÄÊ±¼ä£¬WriteEx·½·¨²»Ğ´Ê±¼ä¡£
+// æŠŠå†…å®¹å†™å…¥æ—¥å¿—æ–‡ä»¶ï¼Œfmtæ˜¯å¯å˜å‚æ•°ï¼Œä½¿ç”¨æ–¹æ³•ä¸printfåº“å‡½æ•°ç›¸åŒã€‚
+// Writeæ–¹æ³•ä¼šå†™å…¥å½“å‰çš„æ—¶é—´ï¼ŒWriteExæ–¹æ³•ä¸å†™æ—¶é—´ã€‚
 bool CLogFile::WriteEx(const char *fmt,...)
 {
   if (m_tracefp == 0) return false;
@@ -596,9 +596,9 @@ bool CLogFile::WriteEx(const char *fmt,...)
 
 
 
-// É¾³ı×Ö·û´®×ó±ßÖ¸¶¨µÄ×Ö·û¡£
-// str£º´ı´¦ÀíµÄ×Ö·û´®¡£
-// chr£ºĞèÒªÉ¾³ıµÄ×Ö·û¡£
+// åˆ é™¤å­—ç¬¦ä¸²å·¦è¾¹æŒ‡å®šçš„å­—ç¬¦ã€‚
+// strï¼šå¾…å¤„ç†çš„å­—ç¬¦ä¸²ã€‚
+// chrï¼šéœ€è¦åˆ é™¤çš„å­—ç¬¦ã€‚
 void DeleteLChar(char *str,const char chr)
 {
   if (str == 0) return;
@@ -620,9 +620,9 @@ void DeleteLChar(char *str,const char chr)
   return;
 }
 
-// É¾³ı×Ö·û´®ÓÒ±ßÖ¸¶¨µÄ×Ö·û¡£
-// str£º´ı´¦ÀíµÄ×Ö·û´®¡£
-// chr£ºĞèÒªÉ¾³ıµÄ×Ö·û¡£
+// åˆ é™¤å­—ç¬¦ä¸²å³è¾¹æŒ‡å®šçš„å­—ç¬¦ã€‚
+// strï¼šå¾…å¤„ç†çš„å­—ç¬¦ä¸²ã€‚
+// chrï¼šéœ€è¦åˆ é™¤çš„å­—ç¬¦ã€‚
 void DeleteRChar(char *str,const char chr)
 {
   if (str == 0) return;
@@ -640,9 +640,9 @@ void DeleteRChar(char *str,const char chr)
   }
 }
 
-// É¾³ı×Ö·û´®×óÓÒÁ½±ßÖ¸¶¨µÄ×Ö·û¡£
-// str£º´ı´¦ÀíµÄ×Ö·û´®¡£
-// chr£ºĞèÒªÉ¾³ıµÄ×Ö·û¡£
+// åˆ é™¤å­—ç¬¦ä¸²å·¦å³ä¸¤è¾¹æŒ‡å®šçš„å­—ç¬¦ã€‚
+// strï¼šå¾…å¤„ç†çš„å­—ç¬¦ä¸²ã€‚
+// chrï¼šéœ€è¦åˆ é™¤çš„å­—ç¬¦ã€‚
 void DeleteLRChar(char *str,const char chr)
 {
   DeleteLChar(str,chr);
@@ -651,8 +651,8 @@ void DeleteLRChar(char *str,const char chr)
 
 
 
-// °Ñ×Ö·û´®ÖĞµÄĞ¡Ğ´×ÖÄ¸×ª»»³É´óĞ´£¬ºöÂÔ²»ÊÇ×ÖÄ¸µÄ×Ö·û¡£
-// str£º´ı×ª»»µÄ×Ö·û´®£¬Ö§³Öchar[]ºÍstringÁ½ÖÖÀàĞÍ¡£
+// æŠŠå­—ç¬¦ä¸²ä¸­çš„å°å†™å­—æ¯è½¬æ¢æˆå¤§å†™ï¼Œå¿½ç•¥ä¸æ˜¯å­—æ¯çš„å­—ç¬¦ã€‚
+// strï¼šå¾…è½¬æ¢çš„å­—ç¬¦ä¸²ï¼Œæ”¯æŒchar[]å’Œstringä¸¤ç§ç±»å‹ã€‚
 void ToUpper(char *str)
 {
   if (str == 0) return;
@@ -688,11 +688,11 @@ void ToUpper(string &str)
 void *accept_request(void *arg)
 //void accept_request(int client)
 {
-  pthread_cleanup_push(pthmainexit,arg);  // ÉèÖÃÏß³ÌÇåÀíº¯Êı¡£
+  pthread_cleanup_push(pthmainexit,arg);  // è®¾ç½®çº¿ç¨‹æ¸…ç†å‡½æ•°ã€‚
 
-  pthread_detach(pthread_self());  // ·ÖÀëÏß³Ì¡£
+  pthread_detach(pthread_self());  // åˆ†ç¦»çº¿ç¨‹ã€‚
 
-  pthread_setcanceltype(PTHREAD_CANCEL_DISABLE,NULL);  // ÉèÖÃÈ¡Ïû·½Ê½ÎªÁ¢¼´È¡Ïû¡£
+  pthread_setcanceltype(PTHREAD_CANCEL_DISABLE,NULL);  // è®¾ç½®å–æ¶ˆæ–¹å¼ä¸ºç«‹å³å–æ¶ˆã€‚
 
   int client = (long) arg;
 
@@ -790,14 +790,14 @@ void bad_request(int client)
   logfile.Write(RED("%s"),buf);
   sprintf(buf, "\r\n");
   send(client, buf, sizeof(buf), 0);
-  logfile.Write(RED("%s"),buf);
+  //logfile.Write(RED("%s"),buf);
   sprintf(buf, "<P>Your browser sent a bad request,\r\n");
   send(client, buf, sizeof(buf), 0);
-  logfile.Write(RED("%s"),buf);
-  logfile.Write(RED("\n"));
+  //logfile.Write(RED("%s"),buf);
+  //logfile.Write(RED("\n"));
   sprintf(buf, "such as a POST without a Content-Length.\r\n");
   send(client, buf, sizeof(buf), 0);
-  logfile.Write(RED("%s"),buf);
+  //logfile.Write(RED("%s"),buf);
 }
 
 
@@ -806,12 +806,12 @@ void cat(int client, FILE *resource)
   char buf[1024];
 
   fgets(buf, sizeof(buf), resource);
-    logfile.Write(GREEN("%s"),buf);
+  //logfile.Write(GREEN("%s"),buf);
   while (!feof(resource))
   {
     send(client, buf, strlen(buf), 0);
     fgets(buf, sizeof(buf), resource);
-    logfile.Write(GREEN("%s"),buf);
+    //logfile.Write(GREEN("%s"),buf);
   }
 }
 
@@ -827,9 +827,9 @@ void cannot_execute(int client)
   logfile.Write(RED("%s"),buf);
   sprintf(buf, "\r\n");
   send(client, buf, strlen(buf), 0);
-  logfile.Write(RED("%s"),buf);
+  //logfile.Write(RED("%s"),buf);
   sprintf(buf, "<P>Error prohibited CGI execution.\r\n");
-  send(client, buf, strlen(buf), 0);
+  s//end(client, buf, strlen(buf), 0);
   logfile.Write(RED("%s"),buf);
 }
 
@@ -855,14 +855,14 @@ void execute_cgi(int client, const char *path, const char *method,\
   else    /* POST */
   {
     numchars = get_line(client, buf, sizeof(buf));
-    logfile.Write("%s",buf);
+    //logfile.Write("%s",buf);
 
     while ((numchars > 0) && strcmp("\n", buf))
     {
       if (strncmp(buf, "Content-Length:",15) == 0)
       content_length = atoi(buf+15); 
       numchars = get_line(client, buf, sizeof(buf));
-      logfile.Write("%s",buf);
+      //logfile.Write("%s",buf);
     }
 
     if (content_length == -1) 
@@ -881,7 +881,7 @@ void execute_cgi(int client, const char *path, const char *method,\
 
   if(pipe(pipefd)==-1)
   {
-    printf("ERROR : ´´½¨ÄäÃû¹ÜµÀÊ§°Ü£¬Ê§°ÜºÅ %d\n", errno);
+    printf("ERROR : åˆ›å»ºåŒ¿åç®¡é“å¤±è´¥ï¼Œå¤±è´¥å· %d\n", errno);
     return;
   }
 
@@ -903,7 +903,7 @@ void execute_cgi(int client, const char *path, const char *method,\
         readLength = read(pipefd[0], sendData, sizeof(sendData));
         if(readLength==0)break;
         write(client, sendData, readLength);
-        logfile.Write(GREEN("%s\n"),sendData);
+        //logfile.Write(GREEN("%s\n"),sendData);
         }while(readLength==sizeof(sendData));
     waitpid(pid, &status, 0);
   }
@@ -964,7 +964,7 @@ void headers(int client, const char *filename)
   logfile.Write(GREEN("%s"),buf);
   send(client, buf, strlen(buf), 0);
   strcpy(buf, "\r\n");
-  logfile.Write(GREEN("%s"),buf);
+  //logfile.Write(GREEN("%s"),buf);
   send(client, buf, strlen(buf), 0);
 }
 
@@ -984,22 +984,22 @@ void not_found(int client)
   logfile.Write(RED("%s"),buf);
   sprintf(buf, "\r\n");
   send(client, buf, strlen(buf), 0);
-  logfile.Write(RED("%s"),buf);
+  //logfile.Write(RED("%s"),buf);
   sprintf(buf, "<HTML><TITLE>Not Found</TITLE>\r\n");
   send(client, buf, strlen(buf), 0);
-  logfile.Write(RED("%s"),buf);
+  //logfile.Write(RED("%s"),buf);
   sprintf(buf, "<BODY><P>The server could not fulfill\r\n");
   send(client, buf, strlen(buf), 0);
-  logfile.Write(RED("%s"),buf);
+  //logfile.Write(RED("%s"),buf);
   sprintf(buf, "your request because the resource specified\r\n");
   send(client, buf, strlen(buf), 0);
-  logfile.Write(RED("%s"),buf);
+  //logfile.Write(RED("%s"),buf);
   sprintf(buf, "is unavailable or nonexistent.\r\n");
   send(client, buf, strlen(buf), 0);
-  logfile.Write(RED("%s"),buf);
+  //logfile.Write(RED("%s"),buf);
   sprintf(buf, "</BODY></HTML>\r\n");
   send(client, buf, strlen(buf), 0);
-  logfile.Write(RED("%s"),buf);
+  //logfile.Write(RED("%s"),buf);
 }
 
 void serve_file(int client, const char *filename)
@@ -1012,7 +1012,7 @@ void serve_file(int client, const char *filename)
   while ((numchars > 0) && strcmp("\n", buf))  /* read & discard headers */
   {
     numchars = get_line(client, buf, sizeof(buf));
-    logfile.Write("%s",buf);
+    //logfile.Write("%s",buf);
   }
 
   resource = fopen(filename, "r");
@@ -1042,19 +1042,19 @@ void unimplemented(int client)
   logfile.Write(RED("%s"),buf);
   sprintf(buf, "\r\n");
   send(client, buf, strlen(buf), 0);
-  logfile.Write(RED("%s"),buf);
+  //logfile.Write(RED("%s"),buf);
   sprintf(buf, "<HTML><HEAD><TITLE>Method Not Implemented\r\n");
   send(client, buf, strlen(buf), 0);
-  logfile.Write(RED("%s"),buf);
+  //logfile.Write(RED("%s"),buf);
   sprintf(buf, "</TITLE></HEAD>\r\n");
   send(client, buf, strlen(buf), 0);
-  logfile.Write(RED("%s"),buf);
+  //logfile.Write(RED("%s"),buf);
   sprintf(buf, "<BODY><P>HTTP request method not supported.\r\n");
   send(client, buf, strlen(buf), 0);
-  logfile.Write(RED("%s"),buf);
+  //logfile.Write(RED("%s"),buf);
   sprintf(buf, "</BODY></HTML>\r\n");
   send(client, buf, strlen(buf), 0);
-  logfile.Write(RED("%s"),buf);
+  //logfile.Write(RED("%s"),buf);
 }
 
 
